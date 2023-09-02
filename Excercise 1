@@ -1,0 +1,9 @@
+name = input("What is your name?:")
+print("Hello "+name)
+print("pls type your hours and rate to calculate your pay")
+
+hour = input("Number of Hours:")
+rate = input("Number of Rate:")
+pay = float(hour) * float(rate)
+
+print(pay)
