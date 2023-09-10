@@ -1,0 +1,13 @@
+text = input("Text: ")
+
+UPPERCASE = 0
+LOWERCASE = 0
+
+for character in text:
+    if(character.isupper()):
+        UPPERCASE += 1
+    if(character.islower()):
+        LOWERCASE += 1
+
+print("Lowercase:",LOWERCASE)
+print("Uppercase:",UPPERCASE)
