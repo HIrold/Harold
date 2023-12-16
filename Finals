@@ -1,0 +1,101 @@
+import tkinter as tk
+from tkinter import messagebox
+
+
+class Vote:
+    def __init__(self, master):
+        self.master = master
+        self.candidates = []
+        self.votes = {}
+        self.create_ui()
+        self.master.config(bg = "grey")
+        self.master.title("Group 4 voting system")
+        self.master.geometry("1000x1000")
+
+    def create_ui(self):
+        self.label = tk.Label(self.master, text="LIST OF CANDIDATES:",font="bold",bg="grey")
+        self.label.pack(pady=15)
+
+        self.var = tk.StringVar()
+
+        self.listbox = tk.Listbox(self.master, selectmode=tk.SINGLE, bg="cyan3")
+        self.listbox.pack(pady=15)
+
+        self.entry = tk.Entry(self.master)
+        self.entry.pack(pady=5)
+
+        self.add_button = tk.Button(self.master, text="ADD",font="bold", command=self.add_candidate, bg="royalblue4", fg="black")
+        self.add_button.pack()
+
+
+        self.delete_button = tk.Button(self.master, text="DELETE", font="bold", command=self.delete_candidate, bg="goldenrod", fg="black")
+        self.delete_button.pack()
+
+        for candidate in self.candidates:
+            self.listbox.insert(tk.END, candidate)
+
+
+        self.vote_button = tk.Button(self.master, text="VOTE", font="bold", command=self.cast_vote, bg='green', fg="black" )
+        self.vote_button.pack(pady=15)
+
+        self.result_button = tk.Button(self.master, text="SHOW VOTES",font="bold", command=self.show_results, bg="LightGoldenrod3", fg="black")
+        self.result_button.pack()
+
+        tk.Label(self.master, text="").pack()
+
+        self.exit_button = tk.Button(self.master, text="EXIT",font="bold", command=self.exit_app, bg="brown4", fg="black")
+        self.exit_button.pack()
+
+    def add_candidate(self):
+        new_candidate = self.entry.get()
+        if new_candidate and new_candidate not in self.candidates:
+            self.candidates.append(new_candidate)
+            self.votes[new_candidate] = 0
+            self.listbox.insert(tk.END, new_candidate)
+            self.entry.delete(0, tk.END)
+        else:
+            messagebox.showwarning("Please try again")
+
+    def delete_candidate(self):
+        selected_index = self.listbox.curselection()
+        if selected_index:
+            selected_candidate = self.listbox.get(selected_index)
+            self.listbox.delete(selected_index)
+            del self.votes[selected_candidate]
+
+    def cast_vote(self):
+        selected_index = self.listbox.curselection()
+        if selected_index:
+            selected_candidate = self.listbox.get(selected_index)
+            self.votes[selected_candidate] += 1
+            messagebox.showinfo("SUCCESS", f"Thank you for voting {selected_candidate}!")
+        else:
+            messagebox.showwarning("Select a valid candidate.")
+
+    def show_results(self):
+        result_window = tk.Toplevel(self.master)
+        result_window.title("Voting Results")
+        result_window.config(bg="SkyBlue3")
+        result_window.geometry("500x500")
+
+        result_label = tk.Label(result_window, text="NUMBERS OF VOTES:",font="bold", fg="black", bg="HotPink2")
+        result_label.pack(pady=10)
+
+        for candidate, votes in self.votes.items():
+            result = tk.Label(result_window, text=f"{candidate}: {votes} votes",bg="PaleGreen3")
+            result.pack()
+
+    def exit_app(self):
+        confirm = messagebox.askyesno("Exit Confirmation", "Are you sure you want to exit?")
+        if confirm:
+            self.master.destroy()
+
+
+def main():
+    root = tk.Tk()
+    app = Vote(root)
+    root.mainloop()
+
+
+if __name__ == "__main__":
+    main()
